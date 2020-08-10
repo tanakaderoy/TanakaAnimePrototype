@@ -6,4 +6,5 @@ package com.tanaka.mazivanhanga.tanakaanimeprototype
  */
 object Constants {
     const val SHOW_EPISODE_URL = "showUrl"
+    const val CURRENT_SHOW = "currentShow"
 }

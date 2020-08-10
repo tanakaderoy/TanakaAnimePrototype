@@ -1,23 +1,37 @@
 package com.tanaka.mazivanhanga.tanakaanimeprototype.api
 
-import androidx.lifecycle.MutableLiveData
-import com.tanaka.mazivanhanga.tanakaanimeprototype.models.LatestShow
-import com.tanaka.mazivanhanga.tanakaanimeprototype.models.LatestShowResponse
-import com.tanaka.mazivanhanga.tanakaanimeprototype.models.VideoModel
-import com.tanaka.mazivanhanga.tanakaanimeprototype.models.VideoRequestBody
+import android.content.Context
+import com.tanaka.mazivanhanga.tanakaanimeprototype.models.*
+import com.tanaka.mazivanhanga.tanakaanimeprototype.room.LatestShowEpisodeCacheMapper
+import com.tanaka.mazivanhanga.tanakaanimeprototype.room.RoomModule
 import io.reactivex.Single
 
 
 /**
  * Created by Tanaka Mazivanhanga on 07/31/2020
  */
-object Repository {
-    val TAG = Repository::class.simpleName
+class Repository(private val context: Context) {
+
+    companion object {
+        val TAG = Repository::class.simpleName
+        fun getInstance(context: Context): Repository {
+            return Repository(context)
+        }
+    }
+
+    val db = RoomModule.getAnimeDb(context)
+    val animeDao = RoomModule.getAnimeDao(db)
+    val latestShowMapper = LatestShowEpisodeCacheMapper()
 
     fun getLatestShows(): Single<List<LatestShow>> {
-        val data = MutableLiveData<List<LatestShow>>()
-        return ApiHandler.animeService.getLatestShows().map {
-            return@map (it.body() as LatestShowResponse).latestShows
+        return ApiHandler.animeService.getLatestShows().flatMap {
+            val episodes = (it.body() as LatestShowResponse).latestShows
+            episodes.forEach { ep ->
+                animeDao.insert(latestShowMapper.mapToEntity(ep))
+            }
+            return@flatMap animeDao.getLatestShows()
+        }.map {
+            return@map latestShowMapper.mapFromEntitiesList(it)
         }
     }
 
@@ -25,5 +39,13 @@ object Repository {
         return ApiHandler.animeService.getVideo(body).map {
             return@map (it.body() as VideoModel)
         }
+    }
+
+    fun getSearchResults(query: String): Single<List<SearchResult>> {
+        return ApiHandler.animeService.getSearchResults(query)
+    }
+
+    fun getEpisodes(show:String):Single<List<Episode>>{
+        return ApiHandler.animeService.getEpisodes(show)
     }
 }

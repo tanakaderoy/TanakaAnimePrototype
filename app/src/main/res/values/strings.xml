@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Tanaka Anime Prototype</string>
+
+    <string name="media_route_menu_title">Tanaka Anime</string>
+
+    <string name="error_unsupported_drm">DRM scheme not supported by this device.</string>
+    <string name="cast">Cast</string>
+    <string name="search">Search</string>
 </resources>

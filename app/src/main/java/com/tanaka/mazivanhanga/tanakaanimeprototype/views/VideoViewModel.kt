@@ -1,5 +1,6 @@
 package com.tanaka.mazivanhanga.tanakaanimeprototype.views
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tanaka.mazivanhanga.tanakaanimeprototype.api.Repository
@@ -18,9 +19,9 @@ class VideoViewModel : ViewModel() {
     val videLiveData get() = _videoLiveData
     private val compositeDisposable = CompositeDisposable()
 
-    fun getData(body: VideoRequestBody) {
+    fun getData(body: VideoRequestBody, context:Context) {
         compositeDisposable.add(
-            Repository.getVideo(body).subscribeOn(Schedulers.io())
+            Repository.getInstance(context).getVideo(body).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _videoLiveData.value = it

@@ -7,6 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -21,14 +22,19 @@ object ApiHandler {
     }
 
     val gson = GsonBuilder().create()
+    val httpLoggingInterceptor = HttpLoggingInterceptor()
 
-    private fun getRetrofitBuilder(endPoint: String): Retrofit.Builder {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        val client = OkHttpClient().newBuilder().addInterceptor(
+    var okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(1, TimeUnit.MINUTES)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS).addInterceptor(
             httpLoggingInterceptor.apply {
                 httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
-            }
-        ).build()
+            })
+        .build()
+
+    private fun getRetrofitBuilder(endPoint: String): Retrofit.Builder {
+        val client = okHttpClient
         return Retrofit.Builder().baseUrl(endPoint)
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

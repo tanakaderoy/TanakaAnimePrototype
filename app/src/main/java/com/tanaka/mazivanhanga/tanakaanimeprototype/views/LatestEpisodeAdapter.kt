@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.tanaka.mazivanhanga.tanakaanimeprototype.Constants.CURRENT_SHOW
 import com.tanaka.mazivanhanga.tanakaanimeprototype.Constants.SHOW_EPISODE_URL
 import com.tanaka.mazivanhanga.tanakaanimeprototype.R
 import com.tanaka.mazivanhanga.tanakaanimeprototype.VideoActivity
@@ -82,6 +83,7 @@ class LatestEpisodeAdapter(private val interaction: Interaction? = null) :
             go_button.setOnClickListener {
                 Toast.makeText(itemView.context, show.currentEpURL, Toast.LENGTH_SHORT).show()
                 val intent = Intent(itemView.context, VideoActivity::class.java)
+                intent.putExtra(CURRENT_SHOW, show)
                 intent.putExtra(SHOW_EPISODE_URL, show.currentEpURL)
                 itemView.context.startActivity(intent)
             }
