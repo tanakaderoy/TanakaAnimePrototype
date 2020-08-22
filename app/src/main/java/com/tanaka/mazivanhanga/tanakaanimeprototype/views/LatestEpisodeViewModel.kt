@@ -63,6 +63,10 @@ class LatestEpisodeViewModel : ViewModel() {
         )
     }
 
+    fun deleteCacheEpisodes(context: Context){
+        RoomModule.getAnimeDao(RoomModule.getAnimeDb(context)).deleteShows()
+    }
+
     fun getEpisodes(show:String,context: Context){
         episodeDataState.value = DataState.Loading
         compositeDisposable.add(

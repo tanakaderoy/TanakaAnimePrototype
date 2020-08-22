@@ -10,11 +10,10 @@ android {
 
     defaultConfig {
         applicationId "com.tanaka.mazivanhanga.tanakaanimeprototype"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "BASE_URL", "\"http://10.147.1.162:8004/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -20,6 +20,7 @@
                 android:id="@+id/search_result_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#eeeeee"
                 tools:listitem="@layout/search_result_list_item" />
         </FrameLayout>
 
@@ -33,6 +34,7 @@
                 android:id="@+id/latest_episode_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#eeeeee"
                 tools:listitem="@layout/latest_show_list_item" />
         </FrameLayout>
     </LinearLayout>

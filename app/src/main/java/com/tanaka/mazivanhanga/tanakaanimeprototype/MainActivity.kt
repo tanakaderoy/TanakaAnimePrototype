@@ -1,6 +1,7 @@
 package com.tanaka.mazivanhanga.tanakaanimeprototype
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tanaka.mazivanhanga.tanakaanimeprototype.api.ApiHandler
 import com.tanaka.mazivanhanga.tanakaanimeprototype.databinding.ActivityMainBinding
 import com.tanaka.mazivanhanga.tanakaanimeprototype.databinding.ShowDetailEpisodeListBinding
 import com.tanaka.mazivanhanga.tanakaanimeprototype.models.Episode
@@ -91,6 +93,10 @@ class MainActivity : AppCompatActivity() {
             this.setHasFixedSize(true)
         }
         binding.swiperefresh.setOnRefreshListener {
+            val runnable = Runnable {
+                viewModel.deleteCacheEpisodes(this)
+            }
+            AsyncTask.execute(runnable)
             viewModel.getData(this)
         }
     }
@@ -207,6 +213,27 @@ class MainActivity : AppCompatActivity() {
         })
 
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.choose_url -> {
+                val builder =
+                    AlertDialog.Builder(this)
+                builder.setTitle("Choose a base url")
+                val baseUrls =
+                    arrayOf("http://10.147.1.162:8004/", "http://localhost:8004/")
+                builder.setItems(
+                    baseUrls
+                ) { dialog, which ->
+                    ApiHandler.setBaseUrl(baseUrls[which])
+                dialog.dismiss()
+                }
+                val dialog = builder.create()
+                dialog.show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {

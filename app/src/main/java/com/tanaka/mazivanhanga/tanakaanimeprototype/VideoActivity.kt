@@ -1,6 +1,7 @@
 package com.tanaka.mazivanhanga.tanakaanimeprototype
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
@@ -82,6 +83,14 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
             initPlayer(it.video)
         })
         viewModel.getData(VideoRequestBody(episodeUrl), this)
+       when(resources.configuration.orientation){
+           Configuration.ORIENTATION_LANDSCAPE -> {
+               hideSystemUi()
+           }
+           Configuration.ORIENTATION_PORTRAIT -> {
+               showSystemUI()
+           }
+       }
 
 
     }
@@ -141,7 +150,7 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
      */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val result = super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.video_menu, menu)
         menu?.findItem(R.id.app_bar_search)?.isVisible = false
         castButton = CastButtonFactory.setUpMediaRouteButton(
             applicationContext,

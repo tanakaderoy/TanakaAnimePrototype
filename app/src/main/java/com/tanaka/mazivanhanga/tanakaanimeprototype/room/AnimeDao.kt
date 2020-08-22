@@ -1,10 +1,7 @@
 
 package com.tanaka.mazivanhanga.tanakaanimeprototype.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Single
 
 
@@ -19,5 +16,7 @@ interface AnimeDao {
 
     @Query(value = "SELECT * FROM latestEpisodes")
     fun getLatestShows(): Single<List<LatestShowEpisodeEntity>>
+    @Query(value = "DELETE FROM latestEpisodes")
+    fun deleteShows()
 
 }
