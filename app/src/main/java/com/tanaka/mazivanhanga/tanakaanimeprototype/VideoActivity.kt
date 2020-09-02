@@ -70,6 +70,7 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
         episodeUrl = intent.getStringExtra(SHOW_EPISODE_URL)!!
         latestShow = (intent.getSerializableExtra(CURRENT_SHOW) as LatestShow)
         binding.root.setBackgroundColor(Color.BLACK)
+        binding.root.keepScreenOn = true
         viewModel = ViewModelProviders.of(this).get(VideoViewModel::class.java)
         binding.videoProgress.apply{
             visibility = VISIBLE
