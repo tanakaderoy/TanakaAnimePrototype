@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                     AlertDialog.Builder(this)
                 builder.setTitle("Choose a base url")
                 val baseUrls =
-                    arrayOf("http://10.147.1.162:8004/", "http://localhost:8004/")
+                    arrayOf("http://10.147.1.162:8004/","http://10.147.1.153:8004/")
                 builder.setItems(
                     baseUrls
                 ) { dialog, which ->

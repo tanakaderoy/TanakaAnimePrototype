@@ -15,6 +15,7 @@ import android.view.View.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.cast.CastPlayer
@@ -125,6 +126,23 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
             _castPlayer?.setSessionAvailabilityListener(this)
         }
 
+        binding.apply {
+            youtubeOverlay.performListener(
+                object : YouTubeOverlay.PerformListener{
+                    override fun onAnimationEnd() {
+                        videoView.useController = true
+                        youtubeOverlay.visibility = GONE
+                    }
+
+                    override fun onAnimationStart() {
+                        videoView.useController = false
+                        youtubeOverlay.visibility = VISIBLE
+                    }
+
+                }
+            )
+        }
+
         // start the playback
         if (_castPlayer?.isCastSessionAvailable == true) {
             playOnPlayer(_castPlayer)
@@ -133,6 +151,8 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
             }
         } else {
             playOnPlayer(_player)
+
+            binding.youtubeOverlay.player(_player!!)
         }
 
     }
@@ -321,6 +341,10 @@ class VideoActivity : AppCompatActivity(), SessionAvailabilityListener {
     private fun releaseLocalPlayer() {
         _player?.release()
         _player = null
+        binding.apply {
+            videoView.player = null
+            _player?.let { youtubeOverlay.player(it) }
+        }
         binding.videoView.player = null
     }
 
