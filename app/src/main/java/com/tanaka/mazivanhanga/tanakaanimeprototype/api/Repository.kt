@@ -36,7 +36,7 @@ class Repository(private val context: Context) {
     }
 
     fun getVideo(body: VideoRequestBody): Single<VideoModel> {
-        return ApiHandler.animeService.getVideo(body).map {
+        return ApiHandler.videoService.getVideo(body).map {
             return@map (it.body() as VideoModel)
         }
     }

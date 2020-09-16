@@ -15,16 +15,25 @@ object ApiHandler {
     private var _baseURL = "http://10.147.1.162:8004/"
     val BASE_URL get() = _baseURL
     var animeService: Service
+    var videoService: Service
+    var videoClient: OkHttpClient
 
     var okHttpClient: OkHttpClient
 
     init {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
 
-        okHttpClient = OkHttpClient.Builder()
+        videoClient = OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS).addInterceptor(
+                httpLoggingInterceptor.apply {
+                    httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
+                })
+            .build()
+
+        okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(
                 httpLoggingInterceptor.apply {
                     httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
                 })
@@ -35,12 +44,17 @@ object ApiHandler {
                 .create(
                     Service::class.java
                 )
+        videoService = getRetrofitBuilder(BASE_URL).build()
+            .create(
+                Service::class.java
+            )
     }
 
     fun setBaseUrl(url: String) {
         println(url)
         _baseURL = url
         animeService = getRetrofitBuilder(BASE_URL).build().create(Service::class.java)
+        videoService = getRetrofitBuilder(BASE_URL).build().create(Service::class.java)
     }
 
     private fun getRetrofitBuilder(endPoint: String): Retrofit.Builder {
